@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Eligibility Checker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    .container {
+      max-width: 400px;
+      margin: auto;
+      background: #f4f4f9;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Eligibility Checker</h1>
+    <p>Enter a Student ID to check eligibility:</p>
+    <input type="number" id="studentId" placeholder="Enter Student ID" />
+    <button onclick="checkEligibility()">Check Eligibility</button>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    async function checkEligibility() {
+      const studentId = document.getElementById('studentId').value;
+      const resultDiv = document.getElementById('result');
+
+      if (!studentId) {
+        resultDiv.innerHTML = 'Please enter a valid Student ID.';
+        return;
+      }
+
+      try {
+        // Fetch scholarship eligibility
+        const scholarshipResponse = await fetch(`http://localhost:8000/scholarship?id=${studentId}`);
+        const scholarshipText = await scholarshipResponse.text();
+
+        // Display the results
+        resultDiv.innerHTML = `
+          <strong>Scholarship Status:</strong> <br />${scholarshipText.replace(/\n/g, '<br />')}
+        `;
+      } catch (error) {
+        resultDiv.innerHTML = 'Error connecting to the server. Please ensure the backend is running.';
+      }
+    }
+  </script>
+</body>
+</html>
